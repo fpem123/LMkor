@@ -59,7 +59,7 @@
         formData.append('text', text);
         formData.append('samples', samples);
 
-        if (types == "generate") {
+        if (types == "gpt-3") {
             const length = document.getElementById("gpt-3_length").value;
             formData.append('length', length);
         }
@@ -70,7 +70,7 @@
 
             if (types == "predict")
                 predict_time_obj.innerText = `${start / 10} 's`;
-            else if (types == "generate")
+            else if (types == "gpt-3")
                 generate_time_obj.innerText = `${start / 10} 's`;
             else if (types == "summarize")
                 summarize_time_obj.innerText = `${start / 10} 's`;
@@ -117,7 +117,7 @@
 
             if (types == "predict")
                 predict_time_obj.innerText = 'Done!';
-            else if (types == "generate")
+            else if (types == "gpt-3")
                 generate_time_obj.innerText = 'Done!';
             else if (types == "summarize")
                 summarize_time_obj.innerText = 'Done!';

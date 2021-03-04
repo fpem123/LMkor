@@ -52,30 +52,36 @@ class Predict:
         if '<mask>' not in text_sentence:
             return {0: ['&lt;mask&gt; 를 입력해주세요. 예시: 이거 &lt;mask&gt; 재밌네? ']}
 
-        results = dict()
+        try:
+            results = dict()
 
-        # ========================= BERT =================================
-        if types == 'bert':
-            input_ids, mask_idx = self.encode(self.bert_tokenizer, text_sentence)
-            input_ids = input_ids.to(self.device)
+            # ========================= BERT =================================
+            if types == 'bert':
+                input_ids, mask_idx = self.encode(self.bert_tokenizer, text_sentence)
+                input_ids = input_ids.to(self.device)
 
-            with torch.no_grad():
-                predict = self.bert_model(input_ids)[0]
+                with torch.no_grad():
+                    predict = self.bert_model(input_ids)[0]
 
-            bert = self.decode(self.bert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
+                bert = self.decode(self.bert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
 
-            results = {'kykim/bert-kor-base': bert}
+                results = {'kykim/bert-kor-base': bert}
 
-        # ========================= ALBERT =================================
-        elif types == 'albert':
-            input_ids, mask_idx = self.encode(self.albert_tokenizer, text_sentence)
-            input_ids = input_ids.to(self.device)
+            # ========================= ALBERT =================================
+            elif types == 'albert':
+                input_ids, mask_idx = self.encode(self.albert_tokenizer, text_sentence)
+                input_ids = input_ids.to(self.device)
 
-            with torch.no_grad():
-                predict = self.albert_model(input_ids)[0]
+                with torch.no_grad():
+                    predict = self.albert_model(input_ids)[0]
 
-            albert = self.decode(self.albert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
+                albert = self.decode(self.albert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
 
-            results = {'kykim/albert-kor-base': albert}
+                results = {'kykim/albert-kor-base': albert}
 
-        return results
+            return results
+
+        except Exception as e:
+            print(e)
+
+            return {'error': e}

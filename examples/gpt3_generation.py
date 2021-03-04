@@ -15,29 +15,34 @@ class Inference:
         self.model.to(self.device)
 
     def __call__(self, text, howmany=1, length=100):
-        input_ids = self.tokenizer.encode(text, return_tensors='pt')
+        try:
+            input_ids = self.tokenizer.encode(text, return_tensors='pt')
 
-        # input_ids also need to apply gpu device!
-        input_ids = input_ids.to(self.device)
+            # input_ids also need to apply gpu device!
+            input_ids = input_ids.to(self.device)
 
-        input_ids = input_ids[:, 1:]  # remove cls token
+            input_ids = input_ids[:, 1:]  # remove cls token
 
-        min_length = len(input_ids.tolist()[0])
-        length = length if length > 0 else 1
-        length += min_length
+            min_length = len(input_ids.tolist()[0])
+            length = length if length > 0 else 1
+            length += min_length
 
-        outputs = self.model.generate(input_ids, min_length=length,
-                                      max_length=int(length * 2),
-                                      do_sample=True,
-                                      top_k=10,
-                                      top_p=0.95,
-                                      no_repeat_ngram_size=2,
-                                      num_return_sequences=howmany)
+            outputs = self.model.generate(input_ids, min_length=length,
+                                          max_length=int(length * 1.5),
+                                          do_sample=True,
+                                          top_k=10,
+                                          top_p=0.95,
+                                          no_repeat_ngram_size=2,
+                                          num_return_sequences=howmany)
 
-        result = dict()
+            result = dict()
 
-        for idx, sample_output in enumerate(outputs):
-            result[idx] = self.tokenizer.decode(sample_output.tolist(), skip_special_tokens=True)
+            for idx, sample_output in enumerate(outputs):
+                result[idx] = self.tokenizer.decode(sample_output.tolist(), skip_special_tokens=True)
 
-        return result
+            return result
 
+        except Exception as e:
+            print(e)
+
+            return {"error": e}

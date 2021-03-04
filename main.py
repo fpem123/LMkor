@@ -136,7 +136,7 @@ def generate(types):
         args.append(text)
         args.append(samples)
 
-        if types == 'generate':
+        if types == 'gpt-3':
             length = int(request.form['length'])
             args.append(length)
 

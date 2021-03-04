@@ -112,7 +112,7 @@ paths:
           description: "Server-side Error"
 
 
-  /generate:
+  /gpt-3:
     post:
       requestBody:
         required: true
@@ -127,7 +127,7 @@ paths:
 
           curl example
 
-              curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/generate" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요." -F "samples=1" -F "length=150"
+              curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/gpt-3" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요." -F "samples=1" -F "length=150"
 
         content:
           multipart/form-data:

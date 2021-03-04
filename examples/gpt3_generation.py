@@ -27,12 +27,12 @@ class Inference:
         length += min_length
 
         outputs = self.model.generate(input_ids, min_length=length,
-                                                 max_length=int(length * 2),
-                                                 do_sample=True,
-                                                 top_k=10,
-                                                 top_p=0.95,
-                                                 no_repeat_ngram_size=2,
-                                                 num_return_sequences=howmany)
+                                      max_length=int(length * 2),
+                                      do_sample=True,
+                                      top_k=10,
+                                      top_p=0.95,
+                                      no_repeat_ngram_size=2,
+                                      num_return_sequences=howmany)
 
         result = dict()
 

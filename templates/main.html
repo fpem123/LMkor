@@ -196,28 +196,54 @@
 
                 <br><hr width="90%">
 
-                <div class="predict">
-                    <h3>Try it!</h3><br>
+                <div class="bert_predict">
+                    <h3>Bert predict try it!</h3><br>
                     <label>Prediction text. That must have &lt;mask&gt;. </label><br>
-                    <textarea id="predict_text" style="width:75%; resize: none;" rows="10"></textarea><br>
+                    <textarea id="bert_text" style="width:75%; resize: none;" rows="3"></textarea><br>
                     <label>How many?: </label>
-                    <select id="predict_samples">
+                    <select id="bert_samples">
                         <option value="3">3</option>
                         <option value="4">4</option>
                         <option value="5">5</option>
                         <option value="6">6</option>
                     </select>
-                    <button class="btn btn-primary btn=lg" type="submit" id="predict_button" onclick="send_req('predict');">Summit</button><br>
-                    <label>Timer:&nbsp;</label><label id="predict_timer">0.0</label><br>
-                    <b><label id="predict_warning" style="color:red;"></label></b>
+                    <button class="btn btn-primary btn=lg" type="submit" id="bert_button" onclick="send_req('bert');">bert</button><br>
+                    <label>Timer:&nbsp;</label><label id="bert_timer">0.0</label><br>
+                    <b><label id="bert_warning" style="color:red;"></label></b>
                 </div>
 
-                <br><hr width="90%">
+                <br>
 
                 <div class="result">
                     <h3><label>Result</label></h3>
                     <!-- Story generate result table -->
-                    <table id="predict_result" width="100%"></table>
+                    <table id="bert_result" width="100%"></table>
+                </div>
+
+                <br><hr width="90%">
+
+                <div class="albert_predict">
+                    <h3>Albert predict try it!</h3><br>
+                    <label>Prediction text. That must have &lt;mask&gt;. </label><br>
+                    <textarea id="albert_text" style="width:75%; resize: none;" rows="3"></textarea><br>
+                    <label>How many?: </label>
+                    <select id="albert_samples">
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                    <button class="btn btn-primary btn=lg" type="submit" id="albert_button" onclick="send_req('albert');">albert</button><br>
+                    <label>Timer:&nbsp;</label><label id="albert_timer">0.0</label><br>
+                    <b><label id="albert_warning" style="color:red;"></label></b>
+                </div>
+
+                <br>
+
+                <div class="result">
+                    <h3><label>Result</label></h3>
+                    <!-- Story generate result table -->
+                    <table id="albert_result" width="100%"></table>
                 </div>
 
                 <br><hr width="50%">
@@ -229,9 +255,23 @@
                 <div class="sample">
                     <h3><label>Example</label></h3>
                     <h5><label>Input</label></h5>
-                    <label>&nbsp;&nbsp;Text: once upon a time,</label><br><br>
-                    <h5><label></label></h5>
-                    <label>&nbsp;&nbsp;</label>
+                    <label>&nbsp;&nbsp;Text: 안녕하세요.</label><br>
+                    <label>&nbsp;&nbsp;How many: 1</label><br>
+                    <label>&nbsp;&nbsp;Size: 150</label><br><br>
+                    <h5><label>Generate result</label></h5>
+                    <label>&nbsp;&nbsp;안녕하세요 요즘 코로나 때문에 밖에 나가기도 힘들고 집에서 보내는 시간이 더 많은데요,,! 그래서 집에서 간단하게 할 수 있는
+                        요리들을 많이 만들게 되는 것 같아요!! 특히, 에어프라이어는 진짜 필수템이라고 할만큼, 없으면 안되는 식품 중 하나인데 이번에 제가 사용해볼
+                        에어프라이어 제품은에어프라이어 추천 제품! 에어메이드 에어프라이어를 소개해드릴게요 : ) 에어프렌즈 에어프라이어 추천 제품으로 에어프라이어가 도착했어요!
+                        에어프라이어의 장점은 역시, 빠른 예열과 빠른 세척인데요! 에어프라이의 경우, 예열하는 것도 정말 중요한 부분이잖아요!
+                        하지만 에어메이트 에어프라이어 같은 경우에는, 기름 배출구를 열어주고, 세척을 해줘야하는 번거로움이 전혀 없기 때문에 너무 편하더라구요!
+                        이렇게, 에어필터가 함께 들어있어요! 정말, 너무 간편하죠? ㅎㅎ에어메이드의 에어프라이어추천 제품 답게, 에어프라이기 전용 기름받이와,
+                        전용팬 그리고 바스켓이 함께 들어있는데요! 기름받침대가 있기 때문에, 세척이 정말 간편해요! 그리고 전용 팬에는 이렇게 기름이 떨어지는 구멍이 있어서,
+                        기름이 정말 쏙 빠지게 되어 있더라구요! 게다가 바스켓은 따로 분리가 되기 때문에 세척이 너무 편리해요! 저는 에어프라이어로 요리를 할때, 항상,
+                        이렇게 기름을 받칠 수 있게 되어 있는 바스켓을 사용해서 음식을 만들어 먹는 편인데요, 에어프라이어에는 기름 받침이 없어서, 정말 불편하더라구요!
+                        ㅎㅎ그래서 항상 바스켓에 기름을 받아놓고, 사용하고 있는데 정말 너무너무너무 편하더라구요 : d 바스켓에는 이렇게 기름 받침대가 따로 있기때문에,
+                        바스켓 세척할 때도 아주 편하더라구요 ㅎㅎ 바스켓의 경우에도, 분리가능한데요! 세척하기가 정말 편리해서 너무 좋더라구요! 바스켓 내부에는,
+                        물받이를 따로 넣을 수 있기 떄문에, 설거지할 때 너무
+                    </label>
                 </div>
 
                 <br><hr width="90%">
@@ -239,24 +279,26 @@
                 <div class="generate">
                     <h3>Try it!</h3><br>
                     <label>Base text: </label>
-                    <input type="text" id="generate_text" style="width:40%">
+                    <input type="text" id="gpt-3_text" style="width:40%">
                     <label>How many?: </label>
-                    <select id="generate_samples">
+                    <select id="gpt-3_samples">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
                         <option value="5">5</option>
                     </select>
-                    <select id="generate_length">
+                    <label>&nbsp;Size?: </label>
+                    <select id="gpt-3_length">
                         <option value="100">100</option>
                         <option value="150">150</option>
                         <option value="200">200</option>
                         <option value="250">250</option>
+                        <option value="300">300</option>
                     </select>
-                    <button class="btn btn-primary btn=lg" type="submit" id="generate_button" onclick="send_req('generate');">Summit</button><br>
-                    <label>Timer:&nbsp;</label><label id="generate_timer">0.0</label><br>
-                    <b><label id="generate_warning" style="color:red;"></label></b>
+                    <button class="btn btn-primary btn=lg" type="submit" id="gpt-3_button" onclick="send_req('gpt-3');">Summit</button><br>
+                    <label>Timer:&nbsp;</label><label id="gpt-3_timer">0.0</label><br>
+                    <b><label id="gpt-3_warning" style="color:red;"></label></b>
                 </div>
 
                 <br><hr width="90%">

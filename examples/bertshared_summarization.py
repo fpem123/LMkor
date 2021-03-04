@@ -23,12 +23,9 @@ class Summarize:
         min_length = max(10, int(0.1*sentence_length))
         max_length = min(128, int(0.3*sentence_length))
 
-        outputs = self.model.generate(
-            input_ids,
-            min_length=min_length,
-            max_length=max_length,
-            num_return_sequences=samples
-        )
+        outputs = self.model.generate(input_ids, min_length=min_length,
+                                      max_length=max_length,
+                                      num_return_sequences=samples)
 
         result = dict()
 

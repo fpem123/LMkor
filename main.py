@@ -57,8 +57,10 @@ def handle_requests_by_batch():
                 try:
                     types = requests['input'].pop(0)
 
-                    if types == 'predict':
+                    if types == 'bert':
                         requests["output"] = run_predict(requests['input'][0], requests['input'][1])
+                    elif types == 'albert':
+                        requests["output"] = run_predict(requests['input'][0], requests['input'][1], types)
                     elif types == 'summarize':
                         requests["output"] = run_summarize(requests['input'][0], requests['input'][1])
                     elif types == 'generate':
@@ -74,9 +76,9 @@ handler = Thread(target=handle_requests_by_batch).start()
 
 ##
 # predict with bert and albert model
-def run_predict(text, samples=3):
+def run_predict(text, samples=3, types='bert'):
     try:
-        results = predictor.predict(text, top_clean=samples)
+        results = predictor.predict(text, types=types, top_clean=samples)
 
         return results
 
@@ -115,7 +117,7 @@ def run_generate(text, samples=1, length=100):
 # Get post request page.
 @app.route('/<types>', methods=['POST'])
 def generate(types):
-    if types not in ['predict', 'summarize', 'generate']:
+    if types not in ['bert', 'albert', 'summarize', 'gpt-3']:
         return jsonify({'Error': 'Not allow type'}), 404
 
     # GPU app can process only one request in one time.
@@ -123,6 +125,8 @@ def generate(types):
         return jsonify({'Error': 'Too Many Requests'}), 429
 
     try:
+        print(types)
+
         args = []
 
         text = request.form['text']

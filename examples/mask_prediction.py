@@ -48,32 +48,34 @@ class Predict:
 
         return input_ids, mask_idx
 
-    def predict(self, text_sentence, top_k=10, top_clean=3):
+    def predict(self, text_sentence, types='bert', top_k=10, top_clean=3):
         if '<mask>' not in text_sentence:
             return {0: ['&lt;mask&gt; 를 입력해주세요. 예시: 이거 &lt;mask&gt; 재밌네? ']}
 
+        results = dict()
+
         # ========================= BERT =================================
-        input_ids, mask_idx = self.encode(self.bert_tokenizer, text_sentence)
-        input_ids = input_ids.to(self.device)
+        if types == 'bert':
+            input_ids, mask_idx = self.encode(self.bert_tokenizer, text_sentence)
+            input_ids = input_ids.to(self.device)
 
-        with torch.no_grad():
-            predict = self.bert_model(input_ids)[0]
+            with torch.no_grad():
+                predict = self.bert_model(input_ids)[0]
 
-        bert = self.decode(self.bert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
+            bert = self.decode(self.bert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
+
+            results = {'kykim/bert-kor-base': bert}
 
         # ========================= ALBERT =================================
-        input_ids, mask_idx = self.encode(self.albert_tokenizer, text_sentence)
-        input_ids = input_ids.to(self.device)
+        elif types == 'bert':
+            input_ids, mask_idx = self.encode(self.albert_tokenizer, text_sentence)
+            input_ids = input_ids.to(self.device)
 
-        with torch.no_grad():
-            predict = self.albert_model(input_ids)[0]
+            with torch.no_grad():
+                predict = self.albert_model(input_ids)[0]
 
-        albert = self.decode(self.albert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
+            albert = self.decode(self.albert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
 
-
-        # ========================= Result =================================
-
-        results = {'kykim/bert-kor-base': bert,
-                   'kykim/albert-kor-base': albert}
+            results = {'kykim/albert-kor-base': albert}
 
         return results

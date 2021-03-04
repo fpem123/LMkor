@@ -67,7 +67,7 @@ class Predict:
             results = {'kykim/bert-kor-base': bert}
 
         # ========================= ALBERT =================================
-        elif types == 'bert':
+        elif types == 'albert':
             input_ids, mask_idx = self.encode(self.albert_tokenizer, text_sentence)
             input_ids = input_ids.to(self.device)
 

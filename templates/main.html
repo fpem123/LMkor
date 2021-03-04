@@ -18,7 +18,7 @@
 
     window.onload = () => {
         predict_time_obj = document.getElementById("predict_timer");
-        generate_time_obj = document.getElementById("generate_timer");
+        generate_time_obj = document.getElementById("gpt-3_timer");
         summarize_time_obj = document.getElementById("summarize_timer");
         flag = false;       // 더블 클릭 체크
     }
@@ -60,7 +60,7 @@
         formData.append('samples', samples);
 
         if (types == "generate") {
-            const length = document.getElementById("generate_length").value;
+            const length = document.getElementById("gpt-3_length").value;
             formData.append('length', length);
         }
 
@@ -306,7 +306,7 @@
                 <div class="result">
                     <h3><label>Result</label></h3>
                     <!-- Story generate result table -->
-                    <table id="generate_result" width="100%"></table>
+                    <table id="gpt-3_result" width="100%"></table>
                 </div>
 
                 <br><hr width="50%">

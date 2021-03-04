@@ -7,16 +7,18 @@ class Inference:
     def __init__(self, model_name):
         transformers.logging.set_verbosity_error()
 
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print(device)
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(self.device)
 
-        self.device = torch.device(device)
         self.tokenizer = BertTokenizerFast.from_pretrained(model_name)
-
         self.model = GPT2LMHeadModel.from_pretrained(model_name, pad_token_id=self.tokenizer.eos_token_id)
+        self.model.to(self.device)
 
     def __call__(self, text, howmany=1, length=100):
         input_ids = self.tokenizer.encode(text, return_tensors='pt')
+
+        # input_ids also need to apply gpu device!
+        input_ids = input_ids.to(self.device)
 
         input_ids = input_ids[:, 1:]  # remove cls token
 

@@ -11,16 +11,16 @@ class Predict:
     def __init__(self):
         transformers.logging.set_verbosity_error()
 
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print(device)
-
-        self.device = device
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(self.device)
 
         self.bert_tokenizer = BertTokenizerFast.from_pretrained('kykim/bert-kor-base')
         self.bert_model = BertForMaskedLM.from_pretrained('kykim/bert-kor-base').eval()
+        self.bert_model.to(self.device)
 
         self.albert_tokenizer = BertTokenizerFast.from_pretrained('kykim/albert-kor-base')
         self.albert_model = AlbertForMaskedLM.from_pretrained('kykim/albert-kor-base').eval()
+        self.albert_model.to(self.device)
 
     def decode(self, tokenizer, pred_idx, top_clean):
         ignore_tokens = string.punctuation + '[PAD][UNK]<pad><unk> '
@@ -54,6 +54,7 @@ class Predict:
 
         # ========================= BERT =================================
         input_ids, mask_idx = self.encode(self.bert_tokenizer, text_sentence)
+        input_ids = input_ids.to(self.device)
 
         with torch.no_grad():
             predict = self.bert_model(input_ids)[0]
@@ -62,6 +63,7 @@ class Predict:
 
         # ========================= ALBERT =================================
         input_ids, mask_idx = self.encode(self.albert_tokenizer, text_sentence)
+        input_ids = input_ids.to(self.device)
 
         with torch.no_grad():
             predict = self.albert_model(input_ids)[0]

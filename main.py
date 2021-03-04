@@ -63,7 +63,7 @@ def handle_requests_by_batch():
                         requests["output"] = run_predict(requests['input'][0], requests['input'][1], types)
                     elif types == 'summarize':
                         requests["output"] = run_summarize(requests['input'][0], requests['input'][1])
-                    elif types == 'generate':
+                    elif types == 'gpt-3':
                         requests["output"] = run_generate(requests['input'][0], requests['input'][1],
                                                           requests['input'][2])
 

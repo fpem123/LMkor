@@ -23,16 +23,14 @@ app = Flask(__name__)
 
 print("model loading...")
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
 # generate loading
-generator = Inference('kykim/gpt3-kor-small_based_on_gpt2', device, 'pt')
+generator = Inference('kykim/gpt3-kor-small_based_on_gpt2', 'pt')
 
 # summarize loading
-summarizer = Summarize('kykim/bertshared-kor-base', device)
+summarizer = Summarize('kykim/bertshared-kor-base')
 
 # Bert loading
-predictor = Predict(device)
+predictor = Predict()
 
 
 print("complete model loading")

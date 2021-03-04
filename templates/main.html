@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>GPT-2 FairyTales</title>
+    <title>LMKor</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <script type="text/javascript">
-    let time_obj = undefined;
+    let predict_time_obj = undefined;
+    let generate_time_obj = undefined;
+    let summarize_time_obj = undefined;
     let flag = undefined;
-    let chars = undefined;
 
     window.onload = () => {
-        time_obj = document.getElementById("timer");
+        predict_time_obj = document.getElementById("predict_timer");
+        generate_time_obj = document.getElementById("generate_timer");
+        summarize_time_obj = document.getElementById("summarize_timer");
         flag = false;       // 더블 클릭 체크
     }
 
@@ -34,30 +37,43 @@
     }
 
 
-    function send_req() {
+    function send_req(types) {
         if (double_submit_check()){
+            document.getElementById(`${types}_warning`).innerText = "It's already working.";
             return ;
         }
 
-        let text = document.getElementById("text").value;
+        const text = document.getElementById(`${types}_text`).value;
+        const samples = document.getElementById(`${types}_samples`).value;
 
         if (text == '') {
-            document.getElementById('warning').innerText = 'Please fill text!';
+            document.getElementById(`${types}_warning`).innerText = 'Please fill text!';
             flag = false;
             return ;
         }
 
         const formData = new FormData();
-        const url = "/fairytale";
+        const url = `/${types}`;
         let start = 0;
 
         formData.append('text', text);
-        formData.append('length', 300);
+        formData.append('samples', samples);
+
+        if (types == "generate") {
+            const length = document.getElementById("generate_length").value;
+            formData.append('length', length);
+        }
 
         // timer
         timer = setInterval(() => {
             start += 1;
-            time_obj.innerText = `${start / 10} 's`;
+
+            if (types == "predict")
+                predict_time_obj.innerText = `${start / 10} 's`;
+            else if (types == "generate")
+                generate_time_obj.innerText = `${start / 10} 's`;
+            else if (types == "summarize")
+                summarize_time_obj.innerText = `${start / 10} 's`;
         }, 100);
 
 
@@ -72,18 +88,45 @@
         }).catch(err => {
             clearInterval(timer);
             flag = false;
-            document.getElementById('warning').innerText = err;
+            document.getElementById(`${types}_warning`).innerText = err;
         }).then(data => {
-            const result = document.getElementById('result');
-            result.innerHTML = '&nbsp;&nbsp;' + data[0];
+            console.log(data);
+            const table = document.getElementById(`${types}_result`);
+
+            // 기존 내용 삭제
+            while (table.hasChildNodes()) {
+                table.removeChild(table.lastChild);
+            }
+
+            for (i in data) {
+                const row = table.insertRow();
+                const idx = row.insertCell(0);
+                const text = row.insertCell(1);
+
+                idx.style.width = "20%";
+                text.style.width = '70%';
+                text.style.height = '60pt';
+
+                idx.innerHTML = i;
+                text.innerHTML = data[i];
+
+                console.log(data[i]);
+            }
 
             clearInterval(timer);
-            time_obj.innerText = 'Done!';
+
+            if (types == "predict")
+                predict_time_obj.innerText = 'Done!';
+            else if (types == "generate")
+                generate_time_obj.innerText = 'Done!';
+            else if (types == "summarize")
+                summarize_time_obj.innerText = 'Done!';
+
             flag = false;
         }).catch(err => {
             clearInterval(timer);
             flag = false;
-            document.getElementById('warning').innerText = err;
+            document.getElementById(`${types}_warning`).innerText = err;
         });
 
     }
@@ -120,8 +163,7 @@
             <div class="intro">
                 <br>
                 <!-- Project title -->
-                <h1>GPT-2 FairyTales</h1><br>
-                <a>Generate FairyTales using GPT-2 model.</a><br><br>
+                <h1>LMKor</h1><br>
                 <a>Origin Git hub repository : </a> <a href="https://github.com/kiyoungkim1/LMkor" target="_blank">kiyoungkim1/LMkor</a><br>
                 <a>My Git hub repository : </a> <a href="https://github.com/fpem123/LMkor" target="_blank">fpem123/LMkor</a><br>
                 <a>Open API : </a> <a href="" target="_blank">On Ainize</a><br>
@@ -137,34 +179,135 @@
 
             <br><hr width="90%">
 
-            <div class="sample">
-                <h3><label>Example</label></h3>
-                <h5><label>Input</label></h5>
-                <label>&nbsp;&nbsp;Text: once upon a time,</label><br><br>
-                <h5><label></label></h5>
-                <label>&nbsp;&nbsp;
-            </div>
+            <details>
+                <summary>Predict model</summary>
 
-            <br><hr width="90%">
+                <div class="sample">
+                    <h3><label>Example</label></h3>
+                    <h5><label>Input</label></h5>
+                    <label>&nbsp;&nbsp;Text: once upon a time,</label><br><br>
+                    <h5><label></label></h5>
+                    <label>&nbsp;&nbsp;</label>
+                </div>
 
-            <div class="generate">
-                <h3>Try it!</h3><br>
-                <label>Base text: </label>
-                <input type="text" id="text" style="width:40%">
-                <button class="btn btn-primary btn=lg" type="submit" id="button1" onclick="send_req();">Summit</button><br>
-                <label>Timer:&nbsp;</label><label id="timer">0.0</label><br>
-                <b><label id="warning" style="color:red;"></label></b>
-            </div>
+                <br><hr width="90%">
 
-            <br><hr width="90%">
+                <div class="predict">
+                    <h3>Try it!</h3><br>
+                    <label>Prediction text. That must have &lt;mask&gt;. </label><br>
+                    <textarea id="predict_text" style="width:75%; resize: none;" rows="10"></textarea><br>
+                    <label>How many?: </label>
+                    <select id="predict_samples">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <button class="btn btn-primary btn=lg" type="submit" id="predict_button" onclick="send_req('predict');">Summit</button><br>
+                    <label>Timer:&nbsp;</label><label id="predict_timer">0.0</label><br>
+                    <b><label id="predict_warning" style="color:red;"></label></b>
+                </div>
 
-            <div class="result">
-                <h3><label>Result</label></h3>
-                <!-- Story generate result table -->
-                <label id="result"></label>
-            </div>
+                <br><hr width="90%">
 
-            <br><hr width="50%">
+                <div class="result">
+                    <h3><label>Result</label></h3>
+                    <!-- Story generate result table -->
+                    <table id="predict_result" width="100%"></table>
+                </div>
+
+                <br><hr width="50%">
+            </details>
+
+            <details>
+                <summary>Generate model</summary>
+
+                <div class="sample">
+                    <h3><label>Example</label></h3>
+                    <h5><label>Input</label></h5>
+                    <label>&nbsp;&nbsp;Text: once upon a time,</label><br><br>
+                    <h5><label></label></h5>
+                    <label>&nbsp;&nbsp;</label>
+                </div>
+
+                <br><hr width="90%">
+
+                <div class="generate">
+                    <h3>Try it!</h3><br>
+                    <label>Base text: </label>
+                    <input type="text" id="generate_text" style="width:40%">
+                    <label>How many?: </label>
+                    <select id="generate_samples">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <select id="generate_length">
+                        <option value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                        <option value="250">250</option>
+                    </select>
+                    <button class="btn btn-primary btn=lg" type="submit" id="generate_button" onclick="send_req('generate');">Summit</button><br>
+                    <label>Timer:&nbsp;</label><label id="generate_timer">0.0</label><br>
+                    <b><label id="generate_warning" style="color:red;"></label></b>
+                </div>
+
+                <br><hr width="90%">
+
+                <div class="result">
+                    <h3><label>Result</label></h3>
+                    <!-- Story generate result table -->
+                    <table id="generate_result" width="100%"></table>
+                </div>
+
+                <br><hr width="50%">
+            </details>
+
+            <details>
+                <summary>Summarize model</summary>
+
+                <div class="sample">
+                    <h3><label>Example</label></h3>
+                    <h5><label>Input</label></h5>
+                    <label>&nbsp;&nbsp;Text: once upon a time,</label><br><br>
+                    <h5><label></label></h5>
+                    <label>&nbsp;&nbsp;</label>
+                </div>
+
+                <br><hr width="90%">
+
+                <div class="summarize">
+                    <h3>Try it!</h3><br>
+                    <label>Long text </label><br>
+                    <textarea id="summarize_text" style="width:75%; resize: none;" rows="10"></textarea><br>
+                    <label>How many?: </label>
+                    <select id="summarize_samples">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <button class="btn btn-primary btn=lg" type="submit" id="summarize_button" onclick="send_req('summarize');">Summit</button><br>
+                    <label>Timer:&nbsp;</label><label id="summarize_timer">0.0</label><br>
+                    <b><label id="summarize_warning" style="color:red;"></label></b>
+                </div>
+
+                <br><hr width="90%">
+
+                <div class="result">
+                    <h3><label>Result</label></h3>
+                    <!-- Story generate result table -->
+                    <table id="summarize_result" width="100%"></table>
+                </div>
+
+                <br><hr width="50%">
+            </details>
+
         </div>
     </div>
 </body>

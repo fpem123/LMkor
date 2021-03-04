@@ -5,23 +5,23 @@ import string
 import transformers
 from transformers import BertTokenizerFast, BertForMaskedLM, AlbertForMaskedLM
 
-transformers.logging.set_verbosity_error()
-
-
 class Predict:
 
-    def __init__(self, device):
+    def __init__(self):
+        transformers.logging.set_verbosity_error()
+
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(device)
+
         self.device = device
 
         self.bert_tokenizer = BertTokenizerFast.from_pretrained('kykim/bert-kor-base')
         self.bert_model = BertForMaskedLM.from_pretrained('kykim/bert-kor-base').eval()
-        self.bert_model.device(device)
 
         self.albert_tokenizer = BertTokenizerFast.from_pretrained('kykim/albert-kor-base')
         self.albert_model = AlbertForMaskedLM.from_pretrained('kykim/albert-kor-base').eval()
-        self.albert_model.device(device)
 
-    def decode(tokenizer, pred_idx, top_clean):
+    def decode(self, tokenizer, pred_idx, top_clean):
         ignore_tokens = string.punctuation + '[PAD][UNK]<pad><unk> '
         tokens = []
 
@@ -33,7 +33,7 @@ class Predict:
 
         return ' / '.join(tokens[:top_clean])
 
-    def encode(tokenizer, text_sentence, add_special_tokens=True, mask_token='[MASK]', mask_token_id=4):
+    def encode(self, tokenizer, text_sentence, add_special_tokens=True, mask_token='[MASK]', mask_token_id=4):
         # mask_token = tokenizer.mask_token
         # mask_token_id = tokenizer.mask_token_id
 
@@ -49,8 +49,7 @@ class Predict:
 
     def predict(self, text_sentence, top_k=10, top_clean=3):
         if '<mask>' not in text_sentence:
-            print('<mask> 를 입력해주세요. 예시: 이거 <mask> 재밌네? ')
-            return
+            return {0: ['<mask> 를 입력해주세요. 예시: 이거 <mask> 재밌네? ']}
 
         # ========================= BERT =================================
         input_ids, mask_idx = self.encode(self.bert_tokenizer, text_sentence)
@@ -71,6 +70,6 @@ class Predict:
         albert = self.decode(self.albert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
 
         results = {'kykim/bert-kor-base': bert,
-                'kykim/albert-kor-base': albert}
+                   'kykim/albert-kor-base': albert}
 
         return results

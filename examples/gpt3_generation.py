@@ -1,20 +1,23 @@
 import transformers
+import torch
 from transformers import BertTokenizerFast, TFGPT2LMHeadModel, GPT2LMHeadModel
-transformers.logging.set_verbosity_error()
 
 
 class Inference:
-    def __init__(self, model_name, device, tf_pt='tf'):
+    def __init__(self, model_name, tf_pt='pt'):
+        transformers.logging.set_verbosity_error()
+
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(device)
+
         self.tf_pt = tf_pt
-        self.device = device
+        self.device = torch.device(device)
         self.tokenizer = BertTokenizerFast.from_pretrained(model_name)
 
         if self.tf_pt == 'tf':
             self.model = TFGPT2LMHeadModel.from_pretrained(model_name, pad_token_id=self.tokenizer.eos_token_id)
         else:
             self.model = GPT2LMHeadModel.from_pretrained(model_name, pad_token_id=self.tokenizer.eos_token_id)
-
-        self.model.device(device)
 
     def __call__(self, text, howmany=1, length=100):
         input_ids = self.tokenizer.encode(text, return_tensors='tf' if self.tf_pt=='tf' else 'pt')
@@ -28,16 +31,13 @@ class Inference:
         length = length if length > 0 else 1
         length += min_length
 
-        outputs = self.model.generate(
-            input_ids,
-            min_length=min_length,
-            max_length=length,
-            do_sample=True,
-            top_k=10,
-            top_p=0.95,
-            no_repeat_ngram_size=2,
-            num_return_sequences=howmany
-        )
+        outputs = self.model.generate(input_ids, min_length=length,
+                                                 max_length=int(length * 2),
+                                                 do_sample=True,
+                                                 top_k=10,
+                                                 top_p=0.95,
+                                                 no_repeat_ngram_size=2,
+                                                 num_return_sequences=howmany)
 
         result = dict()
 

@@ -1,15 +1,19 @@
 import transformers
+import torch
 from transformers import BertTokenizerFast, EncoderDecoderModel
 transformers.logging.set_verbosity_error()
 
 
 class Summarize:
-    def __init__(self, model_name, device):
-        self.device = device
+    def __init__(self, model_name):
+        transformers.logging.set_verbosity_error()
+
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(device)
+
+        self.device = torch.device(device)
         self.tokenizer = BertTokenizerFast.from_pretrained(model_name)
         self.model = EncoderDecoderModel.from_pretrained(model_name)
-
-        self.model.device(device)
 
     def __call__(self, text, samples=1):
         input_ids = self.tokenizer.encode(text, return_tensors='pt')

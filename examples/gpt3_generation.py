@@ -1,26 +1,22 @@
 import transformers
 import torch
-from transformers import BertTokenizerFast, TFGPT2LMHeadModel, GPT2LMHeadModel
+from transformers import BertTokenizerFast, GPT2LMHeadModel
 
 
 class Inference:
-    def __init__(self, model_name, tf_pt='pt'):
+    def __init__(self, model_name):
         transformers.logging.set_verbosity_error()
 
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(device)
 
-        self.tf_pt = tf_pt
         self.device = torch.device(device)
         self.tokenizer = BertTokenizerFast.from_pretrained(model_name)
 
-        if self.tf_pt == 'tf':
-            self.model = TFGPT2LMHeadModel.from_pretrained(model_name, pad_token_id=self.tokenizer.eos_token_id)
-        else:
-            self.model = GPT2LMHeadModel.from_pretrained(model_name, pad_token_id=self.tokenizer.eos_token_id)
+        self.model = GPT2LMHeadModel.from_pretrained(model_name, pad_token_id=self.tokenizer.eos_token_id)
 
     def __call__(self, text, howmany=1, length=100):
-        input_ids = self.tokenizer.encode(text, return_tensors='tf' if self.tf_pt=='tf' else 'pt')
+        input_ids = self.tokenizer.encode(text, return_tensors='pt')
 
         # input_ids also need to apply gpu device!
         input_ids = input_ids.to(self.device)

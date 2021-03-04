@@ -3,10 +3,11 @@
 import torch
 import string
 import transformers
-from transformers import BertTokenizerFast, BertForMaskedLM, AlbertForMaskedLM
+from transformers import (BertTokenizerFast, BertForMaskedLM,
+                          AlbertForMaskedLM)
+
 
 class Predict:
-
     def __init__(self):
         transformers.logging.set_verbosity_error()
 
@@ -49,7 +50,7 @@ class Predict:
 
     def predict(self, text_sentence, top_k=10, top_clean=3):
         if '<mask>' not in text_sentence:
-            return {0: ['<mask> 를 입력해주세요. 예시: 이거 <mask> 재밌네? ']}
+            return {0: ['&lt;mask&gt; 를 입력해주세요. 예시: 이거 &lt;mask&gt; 재밌네? ']}
 
         # ========================= BERT =================================
         input_ids, mask_idx = self.encode(self.bert_tokenizer, text_sentence)
@@ -68,6 +69,9 @@ class Predict:
             predict = self.albert_model(input_ids)[0]
 
         albert = self.decode(self.albert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
+
+
+        # ========================= Result =================================
 
         results = {'kykim/bert-kor-base': bert,
                    'kykim/albert-kor-base': albert}

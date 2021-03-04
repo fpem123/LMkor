@@ -24,12 +24,12 @@ app = Flask(__name__)
 print("model loading...")
 
 # generate loading
-generator = Inference('kykim/gpt3-kor-small_based_on_gpt2', 'pt')
+generator = Inference('kykim/gpt3-kor-small_based_on_gpt2')
 
 # summarize loading
 summarizer = Summarize('kykim/bertshared-kor-base')
 
-# Bert loading
+# Bert predict loading
 predictor = Predict()
 
 

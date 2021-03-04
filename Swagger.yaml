@@ -37,7 +37,7 @@ paths:
 
           curl example
 
-              curl -X POST
+              curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/bert" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요 저는 학생입니다. 그리고 저의 취미는 <mask> 입니다." -F "samples=3"
 
         content:
           multipart/form-data:
@@ -81,7 +81,7 @@ paths:
 
           curl example
 
-              curl -X POST
+              curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/albert" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요 저는 학생입니다. 그리고 저의 취미는 <mask> 입니다." -F "samples=3"
 
         content:
           multipart/form-data:
@@ -127,7 +127,7 @@ paths:
 
           curl example
 
-              curl -X POST
+              curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/generate" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요." -F "samples=1" -F "length=150"
 
         content:
           multipart/form-data:
@@ -172,11 +172,11 @@ paths:
           Request body example
 
               name: 안녕하세요 요즘 코로나 때문에 밖에 나가기도 힘들고 집에서 보내는 시간이 더 많은데요,,! 그래서 집에서 간단하게 할 수 있는 요리들을 많이 만들게 되는 것 같아요!! 특히, 에어프라이어는 진짜 필수템이라고 할만큼, 없으면 안되는 식품 중 하나인데 이번에 제가 사용해볼 에어프라이어 제품은에어프라이어 추천 제품! 에어메이드 에어프라이어를 소개해드릴게요 : )
-              samples: 1
+              samples: 3
 
           curl example
 
-              curl -X POST
+              ccurl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/summarize" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요 요즘 코로나 때문에 밖에 나가기도 힘들고 집에서 보내는 시간이 더 많은데요,,! 그래서 집에서 간단하게 할 수 있는 요리들을 많이 만들게 되는 것 같아요!! 특히, 에어프라이어는 진짜 필수템이라고 할만큼, 없으면 안되는 식품 중 하나인데 이번에 제가 사용해볼 에어프라이어 제품은에어프라이어 추천 제품! 에어메이드 에어프라이어를 소개해드릴게요 : )" -F "samples=3"
 
         content:
           multipart/form-data:

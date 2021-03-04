@@ -5,13 +5,10 @@
     update: 21.03.03
 '''
 
-from transformers import TFGPT2LMHeadModel, BertTokenizerFast, BertForMaskedLM, EncoderDecoderModel, AlbertForMaskedLM
 from flask import Flask, request, jsonify, render_template
-import torch
 
 from queue import Queue, Empty
 from threading import Thread
-import string
 import time
 
 from examples.gpt3_generation import Inference

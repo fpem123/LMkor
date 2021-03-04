@@ -17,7 +17,6 @@ class Summarize:
 
     def __call__(self, text, samples=1):
         input_ids = self.tokenizer.encode(text, return_tensors='pt')
-        input_ids = input_ids.to(self.device)
 
         sentence_length = len(input_ids[0])
         min_length = max(10, int(0.1*sentence_length))

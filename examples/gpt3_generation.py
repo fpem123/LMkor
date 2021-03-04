@@ -18,9 +18,6 @@ class Inference:
     def __call__(self, text, howmany=1, length=100):
         input_ids = self.tokenizer.encode(text, return_tensors='pt')
 
-        # input_ids also need to apply gpu device!
-        input_ids = input_ids.to(self.device)
-
         input_ids = input_ids[:, 1:]  # remove cls token
 
         min_length = len(input_ids.tolist()[0])

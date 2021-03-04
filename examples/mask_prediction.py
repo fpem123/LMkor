@@ -54,7 +54,6 @@ class Predict:
 
         # ========================= BERT =================================
         input_ids, mask_idx = self.encode(self.bert_tokenizer, text_sentence)
-        input_ids = input_ids.to(self.device)
 
         with torch.no_grad():
             predict = self.bert_model(input_ids)[0]
@@ -63,7 +62,6 @@ class Predict:
 
         # ========================= ALBERT =================================
         input_ids, mask_idx = self.encode(self.albert_tokenizer, text_sentence)
-        input_ids = input_ids.to(self.device)
 
         with torch.no_grad():
             predict = self.albert_model(input_ids)[0]

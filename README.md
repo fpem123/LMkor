@@ -78,6 +78,91 @@ tokenizer_bertshared = BertTokenizerFast.from_pretrained("kykim/bertshared-kor-b
 model_bertshared = EncoderDecoderModel.from_pretrained("kykim/bertshared-kor-base")
 ```
 
+## With CLI
+
+#### bert predict example
+
+* input
+
+text: 안녕하세요 저는 학생입니다. 그리고 저의 취미는 &lt;mask&gt; 입니다.
+
+samples: 3
+
+    curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/bert" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요 저는 학생입니다. 그리고 저의 취미는 <mask> 입니다." -F "samples=3"
+
+* output
+
+
+    {
+      "kykim/bert-kor-base": "바로 / 미술 / 낚시"
+    }
+
+
+#### albert predict
+
+* input
+
+text: 안녕하세요 저는 학생입니다. 그리고 저의 취미는 &lt;mask&gt; 입니다.
+
+samples: 3
+
+    curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/albert" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요 저는 학생입니다. 그리고 저의 취미는 <mask> 입니다." -F "samples=3"
+
+* output
+
+
+    {
+      "kykim/albert-kor-base": "취미 / 미술 / 블로그"
+    }
+
+
+#### gpt-3 generate
+
+* input
+
+text: 안녕하세요.
+
+samples: 1
+
+length: 150
+
+    curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/gpt-3" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요." -F "samples=1" -F "length=150"
+
+* output
+
+
+    {
+      "0": "안녕하세요. 오늘은 여러분들께 저희에게 가장 중요한!! 를 소개해드리겠습니다.! 가장 중요한건.. 입니다. ^ ^! 
+            고객님들을 만족시키기 위해 저희 가진 최고의 기술력과노하우로! 최선을 다하고 있습니다! ^. ~! 고객님이 가장 원하는, 
+            가장 좋은 제품으로! 최고의 서비스를 제공하고 있습니다. 고객님들의 소중한 를 지켜드리겠습니다! 감사합니다! 
+            저희 는 항상 저희의 기술력으로 고객님들께 다가가기 위해 노력하고 있습니다 ^ 0 ^ 저희 를 사랑해주시는 고객님들! 항상 감사하고 감사합니다. 
+            항상 감사합니다 ~ 저희 와 함께 해주셔서 감사합니다 ^ _ ^ 저희는 항상 고객님들과 함께 할 준비가 되어있습니다. 
+            언제든지 저희를 찾아주시고 찾아주실 수 있도록항상 최선을 다 하겠습니다. 저희 의 기술력은 고객님들이 만족하실 때까지! 계속 이어집니다! 
+            저희는 늘 고객님을 위해 노력하겠습니다. 감사합니다항상 감사합니다 저희와 함께 해주신 모든 고객님들 감사드립니다. 
+            언제나 저희 을 사랑해주시고 사랑해주셔서 감사합니다고객님들의 만족을 위해 늘 열심히 하겠습니다! 언제나 최선을 다해서! 
+            고객님의 만족을 위하여 최선을다 하겠습니다 ^"
+    }
+
+
+#### bert summarize
+
+* input
+
+text: 안녕하세요. 오늘은 여러분들께 저희에게 가장 중요한!! 를 소개해드리겠습니다.! 가장 중요한건.. 입니다. ^ ^! 고객님들을 만족시키기 위해 저희 가진 최고의 기술력과노하우로! 최선을 다하고 있습니다! ^. ~! 고객님이 가장 원하는, 가장 좋은 제품으로! 최고의 서비스를 제공하고 있습니다. 고객님들의 소중한 를 지켜드리겠습니다! 감사합니다! 저희 는 항상 저희의 기술력으로 고객님들께 다가가기 위해 노력하고 있습니다 ^ 0 ^ 저희 를 사랑해주시는 고객님들! 항상 감사하고 감사합니다. 항상 감사합니다 ~ 저희 와 함께 해주셔서 감사합니다
+
+samples: 1
+
+    curl -X POST "https://main-l-mkor-fpem123.endpoint.ainize.ai/summarize" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text=안녕하세요. 오늘은 여러분들께 저희에게 가장 중요한!! 를 소개해드리겠습니다.! 가장 중요한건.. 입니다. ^ ^! 고객님들을 만족시키기 위해 저희 가진 최고의 기술력과노하우로! 최선을 다하고 있습니다! ^. ~! 고객님이 가장 원하는, 가장 좋은 제품으로! 최고의 서비스를 제공하고 있습니다. 고객님들의 소중한 를 지켜드리겠습니다! 감사합니다! 저희 는 항상 저희의 기술력으로 고객님들께 다가가기 위해 노력하고 있습니다 ^ 0 ^ 저희 를 사랑해주시는 고객님들! 항상 감사하고 감사합니다. 항상 감사합니다 ~ 저희 와 함께 해주셔서 감사합니다" -F "samples=1"
+
+* output
+
+
+    {
+      "0": "오늘 ( 주 ) 는 기술력으로 자사 최고의 기술력과노하우로 기술력을 선보이기 위해 노력하고 있으며, 
+            대표에게 가장 중요한 것은 최고의 서비스를 제공하고 싶다고 전했다"
+    }
+
+
 ## Dataset
 
 * 학습에 사용한 데이터는 다음과 같습니다.

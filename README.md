@@ -98,7 +98,7 @@ samples: 3
     }
 
 
-#### albert predict
+#### albert predict example
 
 * input
 
@@ -116,7 +116,7 @@ samples: 3
     }
 
 
-#### gpt-3 generate
+#### gpt-3 generate example
 
 * input
 
@@ -144,7 +144,7 @@ length: 150
     }
 
 
-#### bert summarize
+#### bert summarize example
 
 * input
 
